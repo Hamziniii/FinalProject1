@@ -1,0 +1,96 @@
+import random
+while True:
+    try:
+        file = open("customerList.txt", "r+")
+        break
+    except FileNotFoundError:
+        file = open("customerList.txt", "w")
+        file = open("customerList.txt", "r+")
+
+
+# This is in python 3
+# Step 1
+
+
+def display_selection():
+    print("|-------------------------------------------|")
+    print("|Please write the option that you are,      |")
+    print("|1 meaning that you are a Returning Customer|")
+    print("|2 meaning that you are a New Customer      |")
+    print("|3 meaning that you are a Guest             |")
+    print("|-------------------------------------------|")
+    user_type = input("What is your customer type? ")
+    if user_type == "1":
+        print('You have choose "Returning Customer"')
+    if user_type == "2":
+        print('You have choose "New Customer"')
+    if user_type == "3":
+        print('You have choose "Guest"')
+    return user_type
+
+
+def is_int_user_type():
+    while True:
+        try:
+            x = display_selection()
+            y = int(x)
+            return y
+        except ValueError:
+            print("Please enter a numerical value between 1 and 3, try again")
+
+
+def is_between():
+    var1 = is_int_user_type()
+    while True:
+        if var1 > 3 or var1 < 1:
+            var1 = is_int_user_type()
+        else:
+            break
+    return var1
+
+
+# Step 2
+def user_type_guest(user_type):
+    if user_type == 3:
+        print("Welcome Guest to the Kiosk Service Center")
+
+
+# Step 3
+
+
+def user_type_returning(user_type):
+    placeholder = 0
+    placeholder2 = 0
+    sentence = ""
+    if user_type == 1:
+        print("|--------------------------------------------------------------------------------------------|")
+        print("|Please enter the last 4 digits of your phone number, to see if you are a returning customer.|")
+        print("|--------------------------------------------------------------------------------------------|")
+        inp = input()
+        # I don't know why the next line wont execute, after you put 4 digits that are in the file after you have
+        # previously put in 4 digits that were not in the file
+        for line in file:
+            word = line.split()
+            x = len(word)
+            print(line)
+            placeholder2 += 1
+            while x != 0:
+                x -= 1
+                if inp == word[x]:
+                    print("Welcome returning customer: " + inp + " to the Kiosk Service Center")
+                    print("Your Information: " + sentence)
+                    placeholder += 1
+        if placeholder == 0:
+            print("Error: You are not a returning customer, please try again")
+            return 1
+
+def start_up():
+    user = is_between()
+    var2 = user_type_returning(user)
+    # user_type_new(user)
+    user_type_guest(user)
+    if var2 == 1:
+        start_up()
+
+start_up()
+file.close()
