@@ -1,0 +1,136 @@
+# This is convoluted, but it works (except for 1 thing for a reason that I cannot figure out)
+import random
+place = 0
+while True:
+    try:
+        file = open("customerList.txt", "r+")
+        break
+    except FileNotFoundError:
+        file = open("customerList.txt", "w")
+        file = open("customerList.txt", "r+")
+
+
+# This is in python 3
+# Step 1
+
+
+def display_selection():
+    print("|-------------------------------------------|")
+    print("|Please write the option that you are,      |")
+    print("|1 meaning that you are a Returning Customer|")
+    print("|2 meaning that you are a New Customer      |")
+    print("|3 meaning that you are a Guest             |")
+    print("|-------------------------------------------|")
+    user_type = input("What is your customer type? ")
+    if user_type == "1":
+        print('You have choose "Returning Customer"')
+    if user_type == "2":
+        print('You have choose "New Customer"')
+    if user_type == "3":
+        print('You have choose "Guest"')
+    return user_type
+
+
+def is_int_user_type():
+    while True:
+        try:
+            x = display_selection()
+            y = int(x)
+            return y
+        except ValueError:
+            print("Please enter a numerical value between 1 and 3, try again")
+
+
+def is_between():
+    var1 = is_int_user_type()
+    while True:
+        if var1 > 3 or var1 < 1:
+            var1 = is_int_user_type()
+        else:
+            break
+    return var1
+
+
+# Step 2
+def user_type_guest(user_type):
+    if user_type == 3:
+        print("Welcome Guest to the Kiosk Service Center")
+
+
+# Step 3
+
+
+def user_type_returning(user_type):
+    placeholder = 0
+    placeholder2 = 0
+    sentence = ""
+    if user_type == 1:
+        print("|--------------------------------------------------------------------------------------------|")
+        print("|Please enter your customer id                                                              .|")
+        print("|--------------------------------------------------------------------------------------------|")
+        inp = input()
+        for line in file:
+            word = line.split()
+            x = len(word)
+            print(line)
+            placeholder2 += 1
+            while x != 0:
+                x -= 1
+                if inp == word[x]:
+                    print("Welcome returning customer: " + inp + " to the Kiosk Service Center")
+                    print("Your Information: " + sentence)
+                    placeholder += 1
+        if placeholder == 0:
+            print("Error: You are not a returning customer, please try again")
+            return 1
+
+
+def user_type_new(user_type):
+    if user_type == 2:
+        w = list()
+        l = 0
+        e = {1: "What is your First name?", 2: "What is your Last name?", 3: "What is your Street Address?",
+             4: "What is the City you live in? ", 5: "What is the State you live in?", 6: "What is your Zip Code?"}
+        print("|-----------------------------------------------------------------------|")
+        print("|Please enter the last 4 digits of your phone number, to become a member|")
+        print("|-----------------------------------------------------------------------|")
+        x = input()
+        print("|-----------------------------------------------------------------------|")
+        print("|Please enter your First Name, Last Name, Street Address, City, State,   |")
+        print("|Zipcode                                                     |")
+        print("|-----------------------------------------------------------------------|")
+        while l <= 5:
+            print(e[l+1])
+            w.append(input())
+            print(w[l])
+            l += 1
+        a = random.getrandbits(16)
+        a = str(a)
+        z = x + str(len(w)) + a
+        file.write("\n" + z)
+        file.write("\n" + ', '.join(w))
+        print("You now have been added to the database, your customer id is: " + z)
+        linelist = file.readlines()
+        print(file.readline()) # I don't know why these are here but I decided not to take them out.
+        print(file.readline())
+        global place
+        place = 1
+        return linelist
+
+
+def hm(thing):
+    print("Your information: ")
+    print(thing[-1])
+
+
+def start_up():
+    user = is_between()
+    var2 = user_type_returning(user)
+    var3 = user_type_new(user)
+    user_type_guest(user)
+    if var2 == 1:
+        start_up()
+    if place == 1:
+        hm(var3)
+
+start_up()
